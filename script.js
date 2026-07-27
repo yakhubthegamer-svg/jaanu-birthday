@@ -68,12 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // RED ROSES FALLING FROM TOP MIDDLE OF SCREEN (🌹 ONLY)
     class RoseParticle {
         constructor(startX, startY) {
-            this.x = startX + (Math.random() * 220 - 110);
+            this.x = startX + (Math.random() * 360 - 180);
             this.y = startY + (Math.random() * 40 - 20);
-            this.speedY = Math.random() * 3 + 2; // FALL DOWNWARD
+            this.speedY = Math.random() * 2.5 + 2; // FALL DOWNWARD
             this.speedX = Math.random() * 3 - 1.5;
             this.opacity = 1;
-            this.fade = 0.009;
+            this.fade = 0.005;
         }
         update() {
             this.y += this.speedY;
@@ -85,12 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // LIP KISS MARKS FALLING FROM TOP MIDDLE OF SCREEN (💋 ONLY)
     class KissParticle {
         constructor(startX, startY) {
-            this.x = startX + (Math.random() * 200 - 100);
+            this.x = startX + (Math.random() * 340 - 170);
             this.y = startY + (Math.random() * 40 - 20);
-            this.speedY = Math.random() * 3 + 2; // FALL DOWNWARD
+            this.speedY = Math.random() * 2.5 + 2; // FALL DOWNWARD
             this.speedX = Math.random() * 3 - 1.5;
             this.opacity = 1;
-            this.fade = 0.01;
+            this.fade = 0.006;
         }
         update() {
             this.y += this.speedY;
@@ -372,12 +372,12 @@ document.addEventListener('DOMContentLoaded', () => {
             roseTotal += 100;
             document.getElementById('roseCount').textContent = roseTotal;
             
-            if (roseParticles.length > 25) roseParticles.splice(0, 10);
+            if (roseParticles.length > 50) roseParticles.splice(0, 15);
 
             const topMiddleX = window.innerWidth / 2;
             const topMiddleY = -30;
 
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 20; i++) {
                 roseParticles.push(new RoseParticle(topMiddleX, topMiddleY));
             }
             popSound();
@@ -389,12 +389,12 @@ document.addEventListener('DOMContentLoaded', () => {
             kissTotal += 10;
             document.getElementById('kissCount').textContent = kissTotal;
             
-            if (kissParticles.length > 25) kissParticles.splice(0, 10);
+            if (kissParticles.length > 50) kissParticles.splice(0, 15);
 
             const topMiddleX = window.innerWidth / 2;
             const topMiddleY = -30;
 
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 20; i++) {
                 kissParticles.push(new KissParticle(topMiddleX, topMiddleY));
             }
             popSound();
