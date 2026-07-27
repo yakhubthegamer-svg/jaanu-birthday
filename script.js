@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Audio Player
     let audioCtx = null;
     let isMusicPlaying = false;
-    const bgMusic = new Audio('assets/Atithi Devo Bhava Baguntundhi Nuvvu Navvithe Video Aadi Sai Kumar Shekar Chandra.mp3');
+    const bgMusic = new Audio('assets/music.mp3');
     bgMusic.loop = true;
     bgMusic.volume = 0.5;
 
@@ -223,16 +223,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3. ROMANTIC MP3 MUSIC PLAYER (LOOPS FOREVER) ---
     function initAndPlayMusic() {
         if (isMusicPlaying) return;
-        isMusicPlaying = true;
-        bgMusic.currentTime = 0;
-        bgMusic.play().catch(() => {});
-        document.getElementById('musicStatusText').textContent = "Romantic Music: ON";
+        bgMusic.play().then(() => {
+            isMusicPlaying = true;
+            const textEl = document.getElementById('musicStatusText');
+            if (textEl) textEl.textContent = "Romantic Music: ON";
+        }).catch(err => {
+            console.warn("Autoplay blocked or audio load error:", err);
+            isMusicPlaying = false;
+            const textEl = document.getElementById('musicStatusText');
+            if (textEl) textEl.textContent = "Romantic Music: OFF (Click to Play)";
+        });
     }
 
     function stopMusic() {
         isMusicPlaying = false;
         bgMusic.pause();
-        document.getElementById('musicStatusText').textContent = "Romantic Music: OFF";
+        const textEl = document.getElementById('musicStatusText');
+        if (textEl) textEl.textContent = "Romantic Music: OFF";
     }
 
     const musicBtn = document.getElementById('musicToggleBtn');
