@@ -180,11 +180,53 @@ document.addEventListener('DOMContentLoaded', () => {
     let holdTimer = null;
     let holdDuration = 0;
     const maxHold = 100;
+    let isUnlocked = false;
+    let fadeInterval = null;
+
+    // Smooth Volume Fade In (starts soft & ramps up)
+    function fadeInMusic(targetVolume = 0.5) {
+        clearInterval(fadeInterval);
+        if (bgMusic.paused) {
+            bgMusic.volume = 0.05;
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+            }).catch(() => {});
+        }
+        fadeInterval = setInterval(() => {
+            if (bgMusic.volume < targetVolume - 0.02) {
+                bgMusic.volume = Math.min(targetVolume, bgMusic.volume + 0.03);
+            } else {
+                bgMusic.volume = targetVolume;
+                clearInterval(fadeInterval);
+            }
+        }, 60);
+    }
+
+    // Smooth Volume Fade Out & Pause
+    function fadeOutAndPauseMusic() {
+        clearInterval(fadeInterval);
+        fadeInterval = setInterval(() => {
+            if (bgMusic.volume > 0.05) {
+                bgMusic.volume = Math.max(0, bgMusic.volume - 0.04);
+            } else {
+                bgMusic.volume = 0;
+                bgMusic.pause();
+                isMusicPlaying = false;
+                clearInterval(fadeInterval);
+            }
+        }, 50);
+    }
 
     function startHold(e) {
-        e.preventDefault();
+        if (e && e.cancelable) e.preventDefault();
         holdDuration = 0;
         clearInterval(holdTimer);
+
+        // Start playing music smoothly at low volume while touching/holding
+        if (!isUnlocked) {
+            fadeInMusic(0.3);
+        }
+
         holdTimer = setInterval(() => {
             holdDuration += 4;
             holdProgress.style.width = `${holdDuration}%`;
@@ -197,55 +239,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function endHold() {
         clearInterval(holdTimer);
-        if (holdDuration < maxHold) {
+        // If released before reaching 100% unlock, stop/fade out music
+        if (!isUnlocked && holdDuration < maxHold) {
             holdDuration = 0;
             holdProgress.style.width = '0%';
+            fadeOutAndPauseMusic();
         }
     }
 
     if (giftBoxTrigger) {
-        giftBoxTrigger.addEventListener('click', () => {
-            unlockSurprise();
-        });
         giftBoxTrigger.addEventListener('mousedown', startHold);
         giftBoxTrigger.addEventListener('mouseup', endHold);
         giftBoxTrigger.addEventListener('mouseleave', endHold);
-        giftBoxTrigger.addEventListener('touchstart', startHold);
+        giftBoxTrigger.addEventListener('touchstart', startHold, { passive: false });
         giftBoxTrigger.addEventListener('touchend', endHold);
+        giftBoxTrigger.addEventListener('touchcancel', endHold);
     }
 
     function unlockSurprise() {
+        if (isUnlocked) return;
+        isUnlocked = true;
+
         if (lockScreen) lockScreen.classList.add('hidden');
         if (mainContent) mainContent.classList.remove('hidden');
 
         triggerFireworks();
-        initAndPlayMusic();
+        fadeInMusic(0.5); // Continue song & swell volume to full normal!
         setTimeout(initScratchCards, 300); // wait for layout to paint before sizing canvas
     }
-
-    // --- 3. ROMANTIC MP3 MUSIC PLAYER (LOOPS FOREVER) ---
-    function initAndPlayMusic() {
-        if (isMusicPlaying) return;
-        bgMusic.play().then(() => {
-            isMusicPlaying = true;
-        }).catch(err => {
-            console.warn("Autoplay waiting for user gesture:", err);
-            isMusicPlaying = false;
-        });
-    }
-
-    // Enable music on first user interaction anywhere on screen if autoplay was blocked
-    const startAudioOnInteraction = () => {
-        if (!isMusicPlaying && bgMusic) {
-            bgMusic.play().then(() => {
-                isMusicPlaying = true;
-                document.removeEventListener('click', startAudioOnInteraction);
-                document.removeEventListener('touchstart', startAudioOnInteraction);
-            }).catch(() => {});
-        }
-    };
-    document.addEventListener('click', startAudioOnInteraction);
-    document.addEventListener('touchstart', startAudioOnInteraction);
 
     // --- 4. TOGETHERNESS TIMER ---
     function updateTimer() {
