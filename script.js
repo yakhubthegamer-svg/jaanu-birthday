@@ -204,6 +204,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (giftBoxTrigger) {
+        giftBoxTrigger.addEventListener('click', () => {
+            unlockSurprise();
+        });
         giftBoxTrigger.addEventListener('mousedown', startHold);
         giftBoxTrigger.addEventListener('mouseup', endHold);
         giftBoxTrigger.addEventListener('mouseleave', endHold);
@@ -212,8 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function unlockSurprise() {
-        lockScreen.classList.add('hidden');
-        mainContent.classList.remove('hidden');
+        if (lockScreen) lockScreen.classList.add('hidden');
+        if (mainContent) mainContent.classList.remove('hidden');
 
         triggerFireworks();
         initAndPlayMusic();
@@ -231,9 +234,24 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn("Autoplay blocked or audio load error:", err);
             isMusicPlaying = false;
             const textEl = document.getElementById('musicStatusText');
-            if (textEl) textEl.textContent = "Romantic Music: OFF (Click to Play)";
+            if (textEl) textEl.textContent = "Romantic Music: OFF (Click anywhere to Play)";
         });
     }
+
+    // Enable music on first user interaction anywhere on screen if autoplay was blocked
+    const startAudioOnInteraction = () => {
+        if (!isMusicPlaying && bgMusic) {
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                const textEl = document.getElementById('musicStatusText');
+                if (textEl) textEl.textContent = "Romantic Music: ON";
+                document.removeEventListener('click', startAudioOnInteraction);
+                document.removeEventListener('touchstart', startAudioOnInteraction);
+            }).catch(() => {});
+        }
+    };
+    document.addEventListener('click', startAudioOnInteraction);
+    document.addEventListener('touchstart', startAudioOnInteraction);
 
     function stopMusic() {
         isMusicPlaying = false;
