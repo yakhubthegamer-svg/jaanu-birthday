@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Audio Player
     let audioCtx = null;
     let isMusicPlaying = false;
-    const bgMusic = new Audio('assets/music.mp3');
+    const bgMusic = new Audio('music.mp3');
     bgMusic.loop = true;
     bgMusic.volume = 0.5;
 
@@ -367,6 +367,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let roseTotal = 0;
     let kissTotal = 0;
 
+    function popSound() {
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        } catch(e) {}
+    }
+
     const sendRosesBtn = document.getElementById('sendRosesBtn');
     const sendKissesBtn = document.getElementById('sendKissesBtn');
 
@@ -645,5 +663,8 @@ document.addEventListener('DOMContentLoaded', () => {
             fire(0.1, { spread: 120, startVelocity: 45 });
         }
     };
+
+    // Initialize scratch card gold foil
+    setTimeout(initScratchCards, 100);
 
 });
