@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday My Love | A Surprise for My Queen ❤️</title>
+    <meta name="description" content="A magical, romantic birthday surprise crafted with endless love for my dearest wife Jaanu.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Background Canvas for Falling Rose Petals & Particle Starfield -->
+    <canvas id="ambientCanvas"></canvas>
+
+
+
+    <!-- 1. LOCK / UNWRAP SURPRISE SCREEN -->
+    <section id="lockScreen" class="screen-overlay active">
+        <div class="lock-card glass-panel">
+            <div class="sparkle-ring"></div>
+            <div class="gift-box-wrapper" id="giftBoxTrigger">
+                <div class="gift-heart-glow"></div>
+                <div class="gift-box">
+                    <i class="fas fa-gift"></i>
+                </div>
+            </div>
+            
+            <h1 class="unlock-title">For My Dearest Wife <span class="highlight-name">Jaanu</span> ❤️</h1>
+            <p class="unlock-subtitle">Press & Hold your gift box to unwrap your birthday surprise!</p>
+            
+            <!-- Progress Bar for Hold Action -->
+            <div class="hold-progress-bar">
+                <div class="progress-fill" id="holdProgress"></div>
+            </div>
+            <span class="hold-hint"><i class="fas fa-hand-pointer"></i> Touch & Hold / Click & Hold</span>
+        </div>
+    </section>
+
+    <!-- 2. MAIN SURPRISE CONTENT CONTAINER -->
+    <main id="mainContent" class="main-container hidden">
+        <!-- Navigation Bar -->
+        <nav class="glass-nav">
+            <div class="nav-logo">
+                <i class="fas fa-crown gold-icon"></i> <span>Jaanu</span>'s Birthday World
+            </div>
+        </nav>
+
+        <!-- HERO SECTION -->
+        <section id="heroSection" class="hero-section">
+            <div class="hero-badge"><i class="fas fa-sparkles"></i> Happy Birthday My Queen <i class="fas fa-sparkles"></i></div>
+            <h1 class="hero-title">Happy Birthday, <br><span class="gradient-text">Jaanu</span>! 🌹</h1>
+            <p class="hero-quote">"You are my today, my tomorrow, and my forever. Every moment with you feels like a beautiful dream come true."</p>
+
+            <!-- Togetherness Counter -->
+            <div class="counter-card glass-panel">
+                <h3 class="counter-title"><i class="fas fa-infinity gold-icon"></i> Our Journey of Endless Love</h3>
+                <div class="timer-grid">
+                    <div class="timer-box">
+                        <span id="daysCount" class="timer-num">00</span>
+                        <span class="timer-label">Days</span>
+                    </div>
+                    <div class="timer-box">
+                        <span id="hoursCount" class="timer-num">00</span>
+                        <span class="timer-label">Hours</span>
+                    </div>
+                    <div class="timer-box">
+                        <span id="minsCount" class="timer-num">00</span>
+                        <span class="timer-label">Minutes</span>
+                    </div>
+                    <div class="timer-box">
+                        <span id="secsCount" class="timer-num">00</span>
+                        <span class="timer-label">Seconds</span>
+                    </div>
+                </div>
+                <p class="counter-footer">...and a lifetime of happiness ahead! ✨</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="triggerFireworks()">
+                    <i class="fas fa-magic"></i> Launch Celebration Fireworks
+                </button>
+                <a href="#cakeSection" class="btn-secondary">
+                    <i class="fas fa-birthday-cake"></i> Blow Candles
+                </a>
+            </div>
+
+            <!-- Interactive Floating Balloons Bar -->
+            <div class="balloon-instructions">
+                <p><i class="fas fa-bullseye"></i> Pop the floating balloons to uncover secret sweet birthday wishes!</p>
+            </div>
+            <div class="balloon-container" id="balloonContainer"></div>
+        </section>
+
+        <!-- CAKE & CANDLE SECTION -->
+        <section id="cakeSection" class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Make A Special Wish</span>
+                <h2 class="section-title">Your Birthday Cake & Candles 🎂</h2>
+                <p class="section-desc">Tap or click each flame to blow out the candles and lock in your birthday wish!</p>
+            </div>
+
+            <div class="cake-card-wrapper glass-panel">
+                <div class="cake-interactive-area">
+                    <div class="candles-row" id="candlesRow">
+                        <div class="candle" data-id="1">
+                            <div class="flame"></div>
+                            <div class="candle-stick"></div>
+                        </div>
+                        <div class="candle" data-id="2">
+                            <div class="flame"></div>
+                            <div class="candle-stick"></div>
+                        </div>
+                        <div class="candle" data-id="3">
+                            <div class="flame"></div>
+                            <div class="candle-stick"></div>
+                        </div>
+                        <div class="candle" data-id="4">
+                            <div class="flame"></div>
+                            <div class="candle-stick"></div>
+                        </div>
+                        <div class="candle" data-id="5">
+                            <div class="flame"></div>
+                            <div class="candle-stick"></div>
+                        </div>
+                    </div>
+                    <div class="cake-image-container">
+                        <img src="assets/cake.png" alt="Birthday Cake" id="heroCakeImg" class="cake-img">
+                        <div class="sparkle-overlay"></div>
+                    </div>
+                </div>
+
+                <div class="cake-status-box" id="cakeStatus">
+                    <i class="fas fa-fire flame-icon"></i> 5 Candles Glowing. Click them to blow them out!
+                </div>
+
+                <div id="wishModal" class="wish-reveal-box hidden">
+                    <div class="wish-content">
+                        <i class="fas fa-heart-circle-bolt wish-icon"></i>
+                        <h3>✨ Your Birthday Wish Is Sent To The Stars! ✨</h3>
+                        <p class="wish-text">"May your life be filled with boundless joy, overflowing laughter, peace, good health, and all the love in the universe. I promise to keep making you smile every single day!"</p>
+                        <button class="btn-primary-sm" onclick="reLightCandles()">Re-light Candles 🕯️</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SURPRISE 1: ROSE & KISS SHOWER SURPRISE -->
+        <section id="showerSection" class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Endless Affection</span>
+                <h2 class="section-title">Send Her Endless Roses & Kisses 🌹💋</h2>
+                <p class="section-desc">Tap the magic heart buttons to shower Jaanu with infinite love!</p>
+            </div>
+
+            <div class="shower-grid">
+                <div class="shower-card glass-panel">
+                    <div class="shower-icon"><i class="fas fa-spa gold-icon"></i></div>
+                    <h3>Shower of 100 Red Roses</h3>
+                    <p>Send a fresh bouquet of rose petals floating across her screen!</p>
+                    <div class="counter-display"><span id="roseCount">0</span> Roses Sent</div>
+                    <button class="btn-primary" id="sendRosesBtn">
+                        <i class="fas fa-rose"></i> Shower Red Roses 🌹
+                    </button>
+                </div>
+
+                <div class="shower-card glass-panel">
+                    <div class="shower-icon"><i class="fas fa-kiss-wink-heart pulse-icon"></i></div>
+                    <h3>Infinite Birthday Kisses</h3>
+                    <p>Shower her screen with glowing sweet kisses & love sparkles!</p>
+                    <div class="counter-display"><span id="kissCount">0</span> Kisses Sent</div>
+                    <button class="btn-primary" id="sendKissesBtn">
+                        <i class="fas fa-heart"></i> Send Kisses 💋
+                    </button>
+                </div>
+
+                <div class="shower-card glass-panel">
+                    <div class="shower-icon"><i class="fas fa-heartbeat gold-icon"></i></div>
+                    <h3>Heartbeat Sync Sensor</h3>
+                    <p>Press & hold the beating heart below to feel our hearts beat in rhythm!</p>
+                    <div class="heartbeat-btn-wrapper" id="heartbeatBtn">
+                        <div class="heartbeat-aura"></div>
+                        <i class="fas fa-heart heartbeat-icon"></i>
+                    </div>
+                    <span id="heartbeatStatus" class="heartbeat-label">Touch Heart To Sync Beat</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SURPRISE 2: REAL INTERACTIVE SCRATCH-OFF COUPONS SECTION -->
+        <section id="couponsSection" class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Interactive Scratch Cards</span>
+                <h2 class="section-title">Jaanu's Secret Scratch Coupons 🪙</h2>
+                <p class="section-desc">Drag your finger or mouse over the gold foil to scratch & reveal your special birthday rewards!</p>
+            </div>
+
+            <div class="coupons-grid">
+                <!-- Scratch Card 1 -->
+                <div class="scratch-card-item glass-panel">
+                    <div class="coupon-ribbon">VIP OFFER</div>
+                    <div class="coupon-hidden-content">
+                        <span class="badge-unlocked">UNLOCKED ❤️</span>
+                        <div class="coupon-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h4>Unlimited Hugs & Pampering Pass</h4>
+                        <p>Valid anytime! Guaranteed royal pampering, foot massage & cozy hugs from your husband.</p>
+                    </div>
+                    <canvas class="scratch-canvas" width="300" height="220"></canvas>
+                </div>
+
+                <!-- Scratch Card 2 -->
+                <div class="scratch-card-item glass-panel">
+                    <div class="coupon-ribbon">GOLD PASS</div>
+                    <div class="coupon-hidden-content">
+                        <span class="badge-unlocked">UNLOCKED 🚗</span>
+                        <div class="coupon-icon"><i class="fas fa-car-alt"></i></div>
+                        <h4>Midnight Drive & Ice Cream</h4>
+                        <p>Whenever you crave it! Your favorite ice cream, favorite music & a romantic late-night drive.</p>
+                    </div>
+                    <canvas class="scratch-canvas" width="300" height="220"></canvas>
+                </div>
+
+                <!-- Scratch Card 3 -->
+                <div class="scratch-card-item glass-panel">
+                    <div class="coupon-ribbon">ROYAL PERK</div>
+                    <div class="coupon-hidden-content">
+                        <span class="badge-unlocked">UNLOCKED 👑</span>
+                        <div class="coupon-icon"><i class="fas fa-crown"></i></div>
+                        <h4>1 Wish Granted (No Questions)</h4>
+                        <p>Ask for anything in the world today, and your husband promises to fulfill it with zero questions asked!</p>
+                    </div>
+                    <canvas class="scratch-canvas" width="300" height="220"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- SURPRISE 3: OUR LOVE STORY MILESTONES -->
+        <section id="storySection" class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Moments That Shaped Us</span>
+                <h2 class="section-title">Our Romantic Love Story Timeline ⏳</h2>
+                <p class="section-desc">Every single chapter with you has been my favorite adventure.</p>
+            </div>
+
+            <div class="timeline-wrapper">
+                <div class="timeline-item left">
+                    <div class="timeline-content glass-panel">
+                        <div class="timeline-icon"><i class="fas fa-eye"></i></div>
+                        <span class="timeline-tag">CHAPTER 1</span>
+                        <h3>The Day Our Eyes Met</h3>
+                        <p>The universe stood still for a second. In that exact moment, I knew my life would never be the same again.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content glass-panel">
+                        <div class="timeline-icon"><i class="fas fa-handshake"></i></div>
+                        <span class="timeline-tag">CHAPTER 2</span>
+                        <h3>Falling Deeply In Love</h3>
+                        <p>Late night conversations, endless laughter, and realizing that home isn't a place—it's a person, and it's you.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content glass-panel">
+                        <div class="timeline-icon"><i class="fas fa-ring"></i></div>
+                        <span class="timeline-tag">CHAPTER 3</span>
+                        <h3>The Marriage Vows</h3>
+                        <p>Promising my entire life, soul, and heart to you. Becoming your husband remains the proudest title I carry.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content glass-panel">
+                        <div class="timeline-icon"><i class="fas fa-infinity"></i></div>
+                        <span class="timeline-tag">CHAPTER 4</span>
+                        <h3>Today & Forever</h3>
+                        <p>Celebrating another magical birthday together, looking forward to growing old with you hand in hand.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMORY GALLERY SECTION -->
+        <section id="gallerySection" class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Precious Moments</span>
+                <h2 class="section-title">Our Romantic Memory Vault 📸</h2>
+                <p class="section-desc">Every picture tells the story of how deeply you are loved.</p>
+            </div>
+
+            <div class="gallery-grid">
+                <!-- Polaroid Card 1 -->
+                <div class="polaroid-card glass-panel" onclick="openPhotoModal('assets/memory1.png', 'Under The Stars With You', 'Holding hands with you feels like finding home. You are my light in every darkness.')">
+                    <div class="polaroid-img-wrapper">
+                        <img src="assets/memory1.png" alt="Memory 1" class="polaroid-img">
+                        <div class="polaroid-hover-badge"><i class="fas fa-search-plus"></i> View Note</div>
+                    </div>
+                    <div class="polaroid-caption">
+                        <h4>Under The Stars With You</h4>
+                        <span class="polaroid-date">My Favorite Moment ❤️</span>
+                    </div>
+                </div>
+
+                <!-- Polaroid Card 2 -->
+                <div class="polaroid-card glass-panel" onclick="openPhotoModal('assets/cake.png', 'The Sweetest Birthday', 'Wishing the happiest birthday to the sweetest soul who completes my world every single day.')">
+                    <div class="polaroid-img-wrapper">
+                        <img src="assets/cake.png" alt="Memory 2" class="polaroid-img">
+                        <div class="polaroid-hover-badge"><i class="fas fa-search-plus"></i> View Note</div>
+                    </div>
+                    <div class="polaroid-caption">
+                        <h4>Celebration of You</h4>
+                        <span class="polaroid-date">Forever & Always ✨</span>
+                    </div>
+                </div>
+
+                <!-- Polaroid Card 3 -->
+                <div class="polaroid-card glass-panel" onclick="openPhotoModal('assets/memory2.png', 'Surprise & Wrapped In Love', 'Gifts are beautiful, but the greatest gift in my life is having you as my wife.')">
+                    <div class="polaroid-img-wrapper">
+                        <img src="assets/memory2.png" alt="Memory 3" class="polaroid-img">
+                        <div class="polaroid-hover-badge"><i class="fas fa-search-plus"></i> View Note</div>
+                    </div>
+                    <div class="polaroid-caption">
+                        <h4>Wrapped In Love</h4>
+                        <span class="polaroid-date">Endless Joy 🌹</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REASONS WHY I LOVE YOU SECTION -->
+        <section id="reasonsSection" class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Heartfelt Notes</span>
+                <h2 class="section-title">Reasons Why I Love You 💌</h2>
+                <p class="section-desc">Click the magic love deck to draw a secret note of appreciation for you!</p>
+            </div>
+
+            <div class="love-deck-container glass-panel">
+                <div class="envelope-graphic" id="drawLoveCardBtn">
+                    <div class="envelope-glow"></div>
+                    <i class="fas fa-envelope-open-text envelope-icon"></i>
+                    <p class="envelope-hint">Click to draw a secret Love Note!</p>
+                </div>
+
+                <div class="love-card-display" id="loveCardDisplay">
+                    <div class="love-card-inner">
+                        <div class="quote-symbol"><i class="fas fa-quote-left"></i></div>
+                        <p id="loveReasonText" class="love-reason-text">"Your smile brightens up my whole world even on the darkest days. Being your husband is my life's greatest blessing."</p>
+                        <span id="loveReasonNumber" class="reason-tag">Love Note #1</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECRET LOVE LETTER SECTION -->
+        <section id="letterSection" class="section-container">
+            <div class="section-header">
+                <span class="section-tag">From My Heart To Yours</span>
+                <h2 class="section-title">My Birthday Letter To You 📜</h2>
+            </div>
+
+            <div class="letter-paper glass-panel">
+                <div class="letter-stamp"><i class="fas fa-heart"></i></div>
+                <h3 class="letter-salutation">My Beloved Wife Jaanu,</h3>
+                
+                <div class="letter-body" id="letterBodyText">
+                    <p>On this beautiful day, the world was blessed with the most wonderful, kind-hearted, and gorgeous human being—you.</p>
+                    <p>Every morning I wake up knowing you are by my side, my heart fills with gratitude. Thank you for your warmth, your unconditional love, your care, and the infectious laughter you bring into our home.</p>
+                    <p>As you turn a year younger today, my only promise to you is to cherish you, stand by you, protect your smile, and love you more deeply with every passing sunrise.</p>
+                    <p>Happy Birthday, my queen, my soulmate, my forever!</p>
+                </div>
+
+                <div class="letter-signature">
+                    <p>Forever Yours,</p>
+                    <h4 class="signature-name">Your Loving Husband Yakhub Shaik ❤️</h4>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="main-footer">
+            <p>Crafted with endless love & magic for Jaanu ❤️ | Happy Birthday!</p>
+        </footer>
+
+    </main>
+
+    <!-- PHOTO LIGHTBOX MODAL -->
+    <div id="photoModal" class="modal-overlay hidden">
+        <div class="modal-card glass-panel">
+            <button class="close-modal-btn" onclick="closePhotoModal()"><i class="fas fa-times"></i></button>
+            <img id="modalImg" src="" alt="Enlarged Memory">
+            <div class="modal-info">
+                <h3 id="modalTitle">Title</h3>
+                <p id="modalDesc">Description</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
