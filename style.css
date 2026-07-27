@@ -615,6 +615,23 @@ body {
     animation: fadeIn 0.8s ease;
 }
 
+.hb-banner-text {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffd700, #ff2a5f, #ffffff, #ffd700);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmer 3s ease infinite, pulseScale 1.5s ease-in-out infinite alternate;
+    margin-bottom: 12px;
+}
+
+@keyframes pulseScale {
+    0% { transform: scale(0.97); }
+    100% { transform: scale(1.04); }
+}
+
 .wish-reveal-box.hidden {
     display: none;
 }

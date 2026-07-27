@@ -109,7 +109,10 @@
             <div class="section-header">
                 <span class="section-tag">Make A Special Wish</span>
                 <h2 class="section-title">Your Birthday Cake & Candles 🎂</h2>
-                <p class="section-desc">Tap or click each flame to blow out the candles and lock in your birthday wish!</p>
+                <p class="section-desc">Blow into your mic 🎙️ or tap each flame to blow out the candles and make your birthday wish!</p>
+                <div style="text-align: center; margin-top: 12px;">
+                    <button id="enableMicBtn" class="btn-primary-sm"><i class="fas fa-microphone"></i> Enable Mic to Blow Candles 🎙️</button>
+                </div>
             </div>
 
             <div class="cake-card-wrapper glass-panel">
@@ -148,10 +151,11 @@
 
                 <div id="wishModal" class="wish-reveal-box hidden">
                     <div class="wish-content">
+                        <h2 class="hb-banner-text">🎉 HAPPY BIRTHDAY JAANU! 🎂🌹</h2>
                         <i class="fas fa-heart-circle-bolt wish-icon"></i>
                         <h3>✨ Your Birthday Wish Is Sent To The Stars! ✨</h3>
                         <p class="wish-text">"May your life be filled with boundless joy, overflowing laughter, peace, good health, and all the love in the universe. I promise to keep making you smile every single day!"</p>
-                        <button class="btn-primary-sm" onclick="reLightCandles()">Re-light Candles 🕯️</button>
+                        <button class="btn-primary-sm" onclick="reLightCandles()" style="margin-top: 15px;">Re-light Candles 🕯️</button>
                     </div>
                 </div>
             </div>

@@ -332,11 +332,106 @@ document.addEventListener('DOMContentLoaded', () => {
         osc.stop(audioCtx.currentTime + 0.15);
     }
 
-    // --- 6. INTERACTIVE CANDLE BLOW-OUT ---
+    // --- 6. INTERACTIVE CANDLE BLOW-OUT (MIC BLOW + TAP) ---
     const candles = document.querySelectorAll('.candle');
     const cakeStatus = document.getElementById('cakeStatus');
     const wishModal = document.getElementById('wishModal');
+    const enableMicBtn = document.getElementById('enableMicBtn');
     let candlesLit = candles.length;
+
+    let micAudioCtx = null;
+    let micAnalyser = null;
+    let isBlowListening = false;
+    let blowCooldown = false;
+
+    function startMicBlowDetection() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    micAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = micAudioCtx.createMediaStreamSource(stream);
+                    micAnalyser = micAudioCtx.createAnalyser();
+                    micAnalyser.fftSize = 256;
+                    source.connect(micAnalyser);
+                    isBlowListening = true;
+
+                    if (enableMicBtn) {
+                        enableMicBtn.innerHTML = `<i class="fas fa-microphone"></i> Mic Active 🎙️ Blow Now!`;
+                        enableMicBtn.style.background = '#4CAF50';
+                        enableMicBtn.style.borderColor = '#4CAF50';
+                    }
+                    if (cakeStatus) {
+                        cakeStatus.innerHTML = `<i class="fas fa-microphone flame-icon"></i> Mic Active! Blow onto your mic to extinguish candles 🌬️`;
+                    }
+
+                    detectBlowLoop();
+                })
+                .catch(err => {
+                    console.warn("Microphone permission denied:", err);
+                    if (enableMicBtn) {
+                        enableMicBtn.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Mic Blocked (Tap flames instead)`;
+                    }
+                });
+        }
+    }
+
+    function handleAllCandlesBlown() {
+        cakeStatus.innerHTML = `<i class="fas fa-check-circle gold-icon"></i> 🎉 HAPPY BIRTHDAY JAANU! All Candles Blown Out! ✨`;
+        wishModal.classList.remove('hidden');
+        triggerFireworks();
+
+        // Softly decrease background music volume so celebration wish card can be read peacefully
+        fadeInMusic(0.2);
+
+        // Shower of roses and kisses
+        const midX = window.innerWidth / 2;
+        for (let i = 0; i < 25; i++) {
+            roseParticles.push(new RoseParticle(midX, -30));
+            kissParticles.push(new KissParticle(midX, -30));
+        }
+    }
+
+    function detectBlowLoop() {
+        if (!isBlowListening || !micAnalyser) return;
+
+        const dataArray = new Uint8Array(micAnalyser.frequencyBinCount);
+        micAnalyser.getByteFrequencyData(dataArray);
+
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
+        }
+        let avgVolume = sum / dataArray.length;
+
+        // Blow detection threshold (volume spike > 38)
+        if (avgVolume > 38 && !blowCooldown && candlesLit > 0) {
+            blowCooldown = true;
+
+            const litCandles = Array.from(candles).filter(c => !c.classList.contains('off'));
+            if (litCandles.length > 0) {
+                const candleToExtinguish = litCandles[0];
+                candleToExtinguish.classList.add('off');
+                candlesLit--;
+                popSound();
+
+                if (candlesLit > 0) {
+                    cakeStatus.innerHTML = `<i class="fas fa-wind flame-icon"></i> 🌬️ Blow Detected! ${candlesLit} Candle${candlesLit > 1 ? 's' : ''} left!`;
+                } else {
+                    handleAllCandlesBlown();
+                }
+            }
+
+            setTimeout(() => { blowCooldown = false; }, 450);
+        }
+
+        if (candlesLit > 0) {
+            requestAnimationFrame(detectBlowLoop);
+        }
+    }
+
+    if (enableMicBtn) {
+        enableMicBtn.addEventListener('click', startMicBlowDetection);
+    }
 
     candles.forEach(candle => {
         candle.addEventListener('click', () => {
@@ -348,9 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (candlesLit > 0) {
                     cakeStatus.innerHTML = `<i class="fas fa-fire flame-icon"></i> ${candlesLit} Candle${candlesLit > 1 ? 's' : ''} left! Keep blowing!`;
                 } else {
-                    cakeStatus.innerHTML = `<i class="fas fa-check-circle gold-icon"></i> All Candles Blown Out! ✨`;
-                    wishModal.classList.remove('hidden');
-                    triggerFireworks();
+                    handleAllCandlesBlown();
                 }
             }
         });
@@ -360,7 +453,14 @@ document.addEventListener('DOMContentLoaded', () => {
         candles.forEach(c => c.classList.remove('off'));
         candlesLit = candles.length;
         wishModal.classList.add('hidden');
-        cakeStatus.innerHTML = `<i class="fas fa-fire flame-icon"></i> 5 Candles Glowing. Click them to blow them out!`;
+        cakeStatus.innerHTML = `<i class="fas fa-fire flame-icon"></i> 5 Candles Glowing. Blow onto your mic or click them!`;
+        
+        // Restore music volume back to normal 0.5
+        fadeInMusic(0.5);
+
+        if (isBlowListening) {
+            detectBlowLoop();
+        }
     };
 
     // --- 7. ROSES & KISSES FALLING FROM TOP MIDDLE OF SCREEN ---
