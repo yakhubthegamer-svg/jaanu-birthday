@@ -228,13 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMusicPlaying) return;
         bgMusic.play().then(() => {
             isMusicPlaying = true;
-            const textEl = document.getElementById('musicStatusText');
-            if (textEl) textEl.textContent = "Romantic Music: ON";
         }).catch(err => {
-            console.warn("Autoplay blocked or audio load error:", err);
+            console.warn("Autoplay waiting for user gesture:", err);
             isMusicPlaying = false;
-            const textEl = document.getElementById('musicStatusText');
-            if (textEl) textEl.textContent = "Romantic Music: OFF (Click anywhere to Play)";
         });
     }
 
@@ -243,8 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isMusicPlaying && bgMusic) {
             bgMusic.play().then(() => {
                 isMusicPlaying = true;
-                const textEl = document.getElementById('musicStatusText');
-                if (textEl) textEl.textContent = "Romantic Music: ON";
                 document.removeEventListener('click', startAudioOnInteraction);
                 document.removeEventListener('touchstart', startAudioOnInteraction);
             }).catch(() => {});
@@ -252,21 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     document.addEventListener('click', startAudioOnInteraction);
     document.addEventListener('touchstart', startAudioOnInteraction);
-
-    function stopMusic() {
-        isMusicPlaying = false;
-        bgMusic.pause();
-        const textEl = document.getElementById('musicStatusText');
-        if (textEl) textEl.textContent = "Romantic Music: OFF";
-    }
-
-    const musicBtn = document.getElementById('musicToggleBtn');
-    if (musicBtn) {
-        musicBtn.addEventListener('click', () => {
-            if (isMusicPlaying) stopMusic();
-            else initAndPlayMusic();
-        });
-    }
 
     // --- 4. TOGETHERNESS TIMER ---
     function updateTimer() {
